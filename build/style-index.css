@@ -1629,12 +1629,5 @@ body.admin-bar .search-overlay {
   border-bottom: none;
   margin-bottom: 0;
 }
-.map_location iframe {
-  width: 100%;
-  min-height: 350px;
-}
-.map_location {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
+
 /*# sourceMappingURL=style-index.css.map*/
