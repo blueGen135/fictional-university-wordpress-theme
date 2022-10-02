@@ -47,7 +47,8 @@ function university_files(){
   wp_enqueue_style( 'university_main_style', get_theme_file_uri('/build/style-index.css') );
   wp_enqueue_style( 'university_extra_style', get_theme_file_uri('/build/index.css') );
   wp_localize_script('main-university-js', 'universityData', array(
-    'root_url' => get_site_url()
+    'root_url' => get_site_url(),
+    'nonce' => wp_create_nonce( 'wp_rest' )
   ));
 }
 add_action( 'wp_enqueue_scripts', 'university_files' );
@@ -137,6 +138,26 @@ function university_post_type (){
       ),
       'menu_icon' => 'dashicons-welcome-learn-more'
   ) );
+
+  //Professor post type
+
+  register_post_type( 'note', array(
+      'capability_type' => 'note',
+      'map_meta_cap' => true,
+      'supports' => array('title', 'editor'),
+      'public' => false,
+      'show_ui' => true,
+      'show_in_rest' => true,
+      'labels' => array(
+        'name' => 'Notes',
+        'add_new_item' => 'Add New Note',
+        'edit_item' => 'Edit Note',
+        'all_items' => 'All Notes',
+        'singular_name' => 'Note'
+      ),
+      'menu_icon' => 'dashicons-welcome-write-blog'
+  ) );
+
 }
 add_action( 'init', 'university_post_type' );
 
@@ -164,6 +185,14 @@ function university_adjust_queries($query){
     }
 }
 add_action( 'pre_get_posts', 'university_adjust_queries');
+//Force Note post to be private
+add_filter('wp_insert_post_data', 'makeNotePrivate');
+function makeNotePrivate($data){
+  if($data['post_type'] == 'note' AND $data['post_status'] != 'trash'){
+    $data['post_status'] = 'private';
+  }
+  return $data;
+}
 //Redirect subscriber to homepage
 add_action('admin_init', 'redirectSubsToFrontend');
 
