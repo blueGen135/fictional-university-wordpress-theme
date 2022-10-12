@@ -1,6 +1,7 @@
 <?php
 
 require get_theme_file_path('/inc/search-route.php');
+require get_theme_file_path('/inc/like-route.php');
 
 function university_custom_rest(){
   register_rest_field('post', 'authorName', array(
@@ -186,6 +187,21 @@ function university_adjust_queries($query){
         )
       ));
     }
+
+    // Like Post Type
+  register_post_type('like', array(
+    'supports' => array('title'),
+    'public' => false,
+    'show_ui' => true,
+    'labels' => array(
+      'name' => 'Likes',
+      'add_new_item' => 'Add New Like',
+      'edit_item' => 'Edit Like',
+      'all_items' => 'All Likes',
+      'singular_name' => 'Like'
+    ),
+    'menu_icon' => 'dashicons-heart'
+  ));
 }
 add_action( 'pre_get_posts', 'university_adjust_queries');
 //Force Note post to be private
